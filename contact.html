@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — Ekjot Nagpal</title>
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+<style>
+.contact-body { padding: 80px 0 110px; }
+
+/* ── Layout ─────────────────────────────────────────── */
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  align-items: start;
+  margin-top: 56px;
+}
+
+/* ── Left — info ────────────────────────────────────── */
+.contact-intro {
+  font-size: 16px;
+  color: var(--text-2);
+  line-height: 1.82;
+  margin-bottom: 36px;
+}
+.contact-intro strong { color: var(--text); font-weight: 500; }
+
+.contact-links { display: flex; flex-direction: column; gap: 12px; }
+
+.cl-item {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 18px 22px;
+  border-radius: var(--r);
+  text-decoration: none;
+  color: var(--text);
+  transition: transform .22s, box-shadow .22s;
+}
+.cl-item:hover { transform: translateX(5px); box-shadow: 0 8px 28px rgba(0,0,0,.35); }
+
+.cl-icon-wrap {
+  width: 42px; height: 42px;
+  border-radius: 10px;
+  background: rgba(255,255,255,.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: var(--accent);
+  flex-shrink: 0;
+}
+.cl-lbl {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  margin-bottom: 4px;
+}
+.cl-val { font-size: 14px; color: var(--text); }
+
+/* ── Right — form ──────────────────────────────────── */
+.form-card {
+  border-radius: var(--r-lg);
+  padding: 40px 40px;
+}
+
+.form-title {
+  font-family: var(--font-h);
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.2px;
+  margin-bottom: 30px;
+}
+
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+.form-grp { margin-bottom: 16px; }
+.form-lbl {
+  display: block;
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--text-3);
+  text-transform: uppercase;
+  letter-spacing: .09em;
+  margin-bottom: 7px;
+}
+.form-input, .form-ta {
+  width: 100%;
+  background: rgba(255,255,255,.03);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 11px 14px;
+  color: var(--text);
+  font-size: 14px;
+  font-family: var(--font-b);
+  outline: none;
+  transition: border-color .2s, background .2s;
+  resize: none;
+}
+.form-input::placeholder, .form-ta::placeholder { color: var(--text-3); }
+.form-input:focus, .form-ta:focus {
+  border-color: rgba(0,200,255,.35);
+  background: rgba(0,200,255,.03);
+}
+.form-ta { min-height: 120px; }
+
+.form-submit {
+  width: 100%;
+  background: var(--text);
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  padding: 13px;
+  font-family: var(--font-m);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  cursor: pointer;
+  transition: background .2s, transform .15s;
+  margin-top: 6px;
+}
+.form-submit:hover { background: var(--accent); transform: translateY(-1px); }
+.form-submit:active { transform: translateY(0); }
+
+.form-note {
+  font-family: var(--font-m);
+  font-size: 10px;
+  color: var(--text-3);
+  text-align: center;
+  margin-top: 12px;
+  letter-spacing: .03em;
+}
+
+/* ── Bottom CTA ────────────────────────────────────── */
+.cta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: var(--r-lg);
+  padding: 36px 40px;
+  margin-top: 24px;
+}
+.cta-h {
+  font-family: var(--font-h);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text);
+  letter-spacing: -.3px;
+  margin-bottom: 5px;
+}
+.cta-s { font-size: 14px; color: var(--text-2); }
+
+/* ── Toast notification ────────────────────────────── */
+.toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  background: var(--surface2);
+  border: 1px solid rgba(0,200,255,.25);
+  color: var(--text);
+  font-family: var(--font-m);
+  font-size: 13px;
+  padding: 14px 22px;
+  border-radius: var(--r);
+  z-index: 9999;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity .3s, transform .3s;
+  box-shadow: 0 8px 30px rgba(0,0,0,.4);
+  pointer-events: none;
+}
+.toast.show { opacity: 1; transform: translateY(0); }
+
+@media (max-width: 820px) {
+  .contact-grid { grid-template-columns: 1fr; }
+  .form-card { padding: 28px 24px; }
+  .form-row { grid-template-columns: 1fr; }
+  .cta-bar { flex-direction: column; gap: 22px; align-items: flex-start; }
+}
+</style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<div class="bg-orbs">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+</div>
+
+<nav class="nav">
+  <a class="nav-logo" href="index.html"><span class="dot"></span>Ekjot Nagpal</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="experience.html">Experience</a></li>
+    <li><a href="skills.html">Skills</a></li>
+    <li><a href="contact.html" class="active">Contact</a></li>
+  </ul>
+  <a class="nav-btn" href="mailto:barbarian2king30@gmail.com">Send Email →</a>
+</nav>
+
+<main class="page">
+  <div class="wrap">
+
+    <div class="pg-head reveal">
+      <div class="pg-label">Contact</div>
+      <h1 class="pg-title">Let's Talk</h1>
+      <p class="pg-sub">Open to AI research collaborations, technical projects, and good conversations.</p>
+    </div>
+
+    <div class="contact-body">
+
+      <div class="contact-grid">
+
+        <!-- Left -->
+        <div class="reveal reveal-d1">
+          <p class="contact-intro">
+            Whether you have a <strong>research idea</strong>, want to collaborate on an
+            <strong>AI project</strong>, or simply want to connect — feel free to reach
+            out through any of the channels below.
+          </p>
+
+          <div class="contact-links">
+
+            <a class="cl-item rgb-slow" href="mailto:nagpalekjotsingh@gmail.com">
+              <div class="cl-icon-wrap"><i class="fa-solid fa-envelope"></i></div>
+              <div>
+                <div class="cl-lbl">Email</div>
+                <div class="cl-val">nagpalekjotsingh@gmail.com</div>
+              </div>
+            </a>
+
+            <a class="cl-item rgb-slow" href="tel:+919857100761">
+              <div class="cl-icon-wrap"><i class="fa-solid fa-phone"></i></div>
+              <div>
+                <div class="cl-lbl">Phone</div>
+                <div class="cl-val">+91 98571 00761</div>
+              </div>
+            </a>
+
+            <a class="cl-item rgb-slow" href="https://www.linkedin.com/in/ekjot-nagpal" target="_blank">
+              <div class="cl-icon-wrap"><i class="fa-brands fa-linkedin-in"></i></div>
+              <div>
+                <div class="cl-lbl">LinkedIn</div>
+                <div class="cl-val">linkedin.com/in/ekjot-nagpal</div>
+              </div>
+            </a>
+
+            <div class="cl-item rgb-slow" style="cursor:default;">
+              <div class="cl-icon-wrap"><i class="fa-solid fa-location-dot"></i></div>
+              <div>
+                <div class="cl-lbl">Location</div>
+                <div class="cl-val">Aizawl, Mizoram, India</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Right — Form -->
+        <div class="form-card rgb reveal reveal-d2">
+          <div class="form-title">Send a Message</div>
+
+          <div class="form-row">
+            <div class="form-grp">
+              <label class="form-lbl">Your Name</label>
+              <input class="form-input" type="text" id="fn" placeholder="Ekjot Nagpal">
+            </div>
+            <div class="form-grp">
+              <label class="form-lbl">Email Address</label>
+              <input class="form-input" type="email" id="fe" placeholder="you@example.com">
+            </div>
+          </div>
+
+          <div class="form-grp">
+            <label class="form-lbl">Subject</label>
+            <input class="form-input" type="text" id="fs" placeholder="Collaboration · Research · General">
+          </div>
+
+          <div class="form-grp">
+            <label class="form-lbl">Message</label>
+            <textarea class="form-ta" id="fm" placeholder="Tell me about your idea..."></textarea>
+          </div>
+
+          <button class="form-submit" id="submitBtn" onclick="sendMsg()">
+            Send Message →
+          </button>
+        </div>
+
+      </div>
+
+      <!-- CTA bar -->
+      <div class="cta-bar rgb reveal">
+        <div>
+          <div class="cta-h">Prefer a direct email?</div>
+          <div class="cta-s">Response time is usually within 24 hours.</div>
+        </div>
+        <a class="btn btn-solid" href="mailto:nagpalekjotsingh@gmail.com">
+          nagpalekjotsingh@gmail.com →
+        </a>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<footer>
+  <span class="f-copy">© 2025 Ekjot Singh Nagpal</span>
+  <div class="f-links">
+    <a href="mailto:nagpalekjotsingh@gmail.com">Email</a>
+    <a href="https://www.linkedin.com/in/ekjot-nagpal" target="_blank">LinkedIn</a>
+  </div>
+</footer>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// Scroll reveal
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }});
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// Toast helper
+function showToast(msg, duration = 3500) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), duration);
+}
+
+// Form → mailto (fully working without backend)
+function sendMsg() {
+  const name    = document.getElementById('fn').value.trim();
+  const email   = document.getElementById('fe').value.trim();
+  const subject = document.getElementById('fs').value.trim();
+  const msg     = document.getElementById('fm').value.trim();
+
+  if (!name)    { showToast('⚠️  Please enter your name.'); return; }
+  if (!email)   { showToast('⚠️  Please enter your email address.'); return; }
+  if (!email.includes('@')) { showToast('⚠️  Please enter a valid email.'); return; }
+  if (!msg)     { showToast('⚠️  Please write a message.'); return; }
+
+  const sub  = subject || `Portfolio Contact from ${name}`;
+  const body =
+`Hi Ekjot,
+
+My name is ${name} and my email is ${email}.
+
+${msg}
+
+---
+Sent via ekjotnagpal.com`;
+
+  const mailto = `mailto:nagpalekjotsingh@gmail.com`
+               + `?subject=${encodeURIComponent(sub)}`
+               + `&body=${encodeURIComponent(body)}`;
+
+  // Open email client
+  window.location.href = mailto;
+
+  // Visual feedback
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = '✓ Opening email client…';
+  btn.style.background = 'var(--accent)';
+  btn.style.color = '#000';
+
+  showToast('✓ Your email client is opening. Message details are pre-filled!', 4500);
+
+  setTimeout(() => {
+    btn.textContent = 'Send Message →';
+    btn.style.background = '';
+    btn.style.color = '';
+  }, 4000);
+}
+
+// Allow Enter key in subject to jump to message
+document.getElementById('fs').addEventListener('keydown', e => {
+  if (e.key === 'Enter') { e.preventDefault(); document.getElementById('fm').focus(); }
+});
+</script>
+<script>
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
+
+  // Move the solid dot instantly with the mouse
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; 
+    my = e.clientY;
+    cursor.style.left = mx + 'px'; 
+    cursor.style.top = my + 'px';
+  });
+
+  // Smooth trailing animation for the ring
+  function animRing() {
+    rx += (mx - rx) * 0.12; // The 0.12 controls the delay speed
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px'; 
+    ring.style.top = ry + 'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // Add the expanding hover effect to specific elements
+  // (You can add more classes/tags to this list separated by commas)
+  const hoverElements = document.querySelectorAll('a, button, .exp-card, .info-card, .cert-card, .llm-chip');
+  
+  hoverElements.forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  });
+</script>
+</body>
+</html>
